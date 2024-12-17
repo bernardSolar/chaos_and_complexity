@@ -121,9 +121,9 @@ def draw_boid(position, velocity):
 
     # Draw triangular boid
     glBegin(GL_TRIANGLES)
-    glVertex3f(1, 0, 0)
-    glVertex3f(-1, 0.5, 0)
-    glVertex3f(-1, -0.5, 0)
+    glVertex3f(2, 0, 0)
+    glVertex3f(-2, 1, 0)
+    glVertex3f(-2, -1, 0)
     glEnd()
 
     glPopMatrix()

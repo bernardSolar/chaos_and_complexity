@@ -18,7 +18,7 @@ y = np.zeros(num_steps)
 z = np.zeros(num_steps)
 
 # Initial conditions
-x[0], y[0], z[0] = 1.0, 1.0, 1.0
+x[0], y[0], z[0] = -1.0, -1.0, 1.0
 
 # Integrate the Lorenz equations
 for i in range(num_steps - 1):
@@ -32,8 +32,8 @@ for i in range(num_steps - 1):
 # Set up the figure and 3D axis
 fig = plt.figure(figsize=(10, 7))
 ax = fig.add_subplot(111, projection='3d')
-ax.set_xlim([-20, 20])
-ax.set_ylim([-30, 30])
+ax.set_xlim([-50, 50])
+ax.set_ylim([-50, 50])
 ax.set_zlim([0, 50])
 ax.set_title("Lorenz Attractor (Evolving)")
 ax.set_xlabel("X")
