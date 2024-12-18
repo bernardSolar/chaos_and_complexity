@@ -31,6 +31,17 @@ for i in range(1, num_steps):
 # Set up the figure and axes
 fig = plt.figure(figsize=(12, 6))
 ax1 = plt.subplot(1, 2, 1, projection='3d')  # 3D plot for Lorenz attractor
+
+# Add these lines to set appropriate axis limits
+ax1.set_xlim(-30, 30)
+ax1.set_ylim(-30, 30)
+ax1.set_zlim(0, 50)
+
+# Add labels for clarity
+ax1.set_xlabel('X')
+ax1.set_ylabel('Y')
+ax1.set_zlabel('Z')
+
 ax2 = plt.subplot(1, 2, 2)                   # 2D plot for x, y, z values
 
 # Initialize the plots
@@ -41,7 +52,7 @@ line2_z, = ax2.plot([], [], label='z', color='b')
 
 ax2.legend()
 ax2.set_xlim(0, num_steps)
-ax2.set_ylim(-30, 30)
+ax2.set_ylim(-50, 50)
 ax2.set_xlabel("Time step")
 ax2.set_ylabel("Values")
 
