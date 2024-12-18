@@ -1,5 +1,5 @@
-# The Lorentz Attractor
-![The Lorentz Attractor](images/lorentz_rho_28_chaos.png " Lorentz Attractor")
+# The Lorenz Attractor
+![The Lorenz Attractor](images/lorenz_rho_28_chaos.png " Lorenz Attractor")
 ## Background
 The Lorenz equations originated from Lorenz's simplified model of atmospheric convection (specifically, Rayleigh-Bénard convection). Here's what each variable represents:
 
@@ -74,7 +74,7 @@ Here's a summary of what we observed in our exploration of the Lorenz system's b
 The Rayleigh number (ρ) represents the strength of the temperature gradient driving convection - essentially how strongly we're heating the fluid from below. It's a dimensionless number that compares buoyancy forces (which drive convection) to viscous forces (which resist flow) and thermal diffusion.
 
 #### Case Studies
-![The Lorentz Attractor ρ = 10](images/lorentz_rho_10_stable_convection.png " Lorentz Attractor ρ = 10")
+![The Lorenz Attractor ρ = 10](images/lorenz_rho_10_stable_convection.png " Lorenz Attractor ρ = 10")
 ρ = 10 (Stable Convection):
 - System quickly settles to a single fixed point
 - Both time series and 3D plot show initial oscillations that dampen out
@@ -83,7 +83,7 @@ The Rayleigh number (ρ) represents the strength of the temperature gradient dri
 - Physically similar to smooth, laminar convection in a gently heated fluid
 
 ρ = 18 (Transient Chaos):
-![The Lorentz Attractor ρ = 18](images/lorentz_rho_18_transient_chaos.png " Lorentz Attractor ρ = 18")
+![The Lorenz Attractor ρ = 18](images/lorenz_rho_18_transient_chaos.png " Lorenz Attractor ρ = 18")
 - Shows chaotic behavior initially but theoretically should eventually stabilize
 - System exhibits "transient chaos" - unstable enough to show complex behavior
 - Sits in an interesting regime between stability and true chaos
@@ -91,7 +91,7 @@ The Rayleigh number (ρ) represents the strength of the temperature gradient dri
 - Physically represents a transitional state between orderly and turbulent convection
 
 ρ = 35 (Strong Chaos):
-![The Lorentz Attractor ρ = 35](images/lorentz_rho_35_strong_chaos.png " Lorentz Attractor ρ = 35")
+![The Lorenz Attractor ρ = 35](images/lorenz_rho_35_strong_chaos.png " Lorenz Attractor ρ = 35")
 - Exhibits vigorous, sustained chaos
 - Larger "butterfly wings" in the attractor plot
 - More erratic and higher amplitude oscillations in all variables
