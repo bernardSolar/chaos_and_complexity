@@ -38,9 +38,11 @@ ax1.set_ylim(-30, 30)
 ax1.set_zlim(0, 50)
 
 # Add labels for clarity
-ax1.set_xlabel('X')
-ax1.set_ylabel('Y')
-ax1.set_zlabel('Z')
+ax1.set_xlabel('Convection Rate (x)')
+ax1.set_ylabel('Temperature Difference (y)')
+ax1.set_zlabel('Temperature Profile Deviation (z)')
+
+ax1.set_title('Lorenz Atmospheric Convection Model')
 
 ax2 = plt.subplot(1, 2, 2)                   # 2D plot for x, y, z values
 
@@ -53,8 +55,19 @@ line2_z, = ax2.plot([], [], label='z', color='b')
 ax2.legend()
 ax2.set_xlim(0, num_steps)
 ax2.set_ylim(-50, 50)
-ax2.set_xlabel("Time step")
-ax2.set_ylabel("Values")
+
+ax2.set_xlabel("Time")
+ax2.set_ylabel("Variable Magnitude")
+ax2.set_title('Evolution of Convection Parameters')
+
+line2_x.set_label('Convection Rate (x)')
+line2_y.set_label('Temp Difference (y)')
+line2_z.set_label('Temp Profile (z)')
+ax2.legend()
+
+# Add a text annotation explaining the parameters
+fig.text(0.02, 0.02, f'σ (Prandtl) = {sigma}\nρ (Rayleigh) = {rho}\nβ = {beta}',
+         fontsize=8, family='monospace')
 
 # Initialize the animation
 def init():
