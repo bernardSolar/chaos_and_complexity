@@ -345,3 +345,21 @@ class TestBoidColorDetermination:
 
         # Should be red (1.0, 0.0, 0.0) when too crowded
         assert color == (1.0, 0.0, 0.0)
+
+    def test_boid_color_yellow_when_too_isolated(self):
+        """Boid should be yellow when no neighbors nearby (isolated).
+
+        When no other boids are within reasonable range (> COHESION_RADIUS),
+        the boid should turn yellow to indicate it's too isolated.
+        """
+        # Boid with no neighbors within cohesion radius
+        boid_a = Boid([0.0, 0.0, 0.0], [0.5, 0.0, 0.0])
+        boid_b = Boid([100.0, 0.0, 0.0], [0.5, 0.0, 0.0])
+        boids = [boid_a, boid_b]
+
+        from boids import get_boid_color
+
+        color = get_boid_color(boid_a, boids)
+
+        # Should be yellow (1.0, 1.0, 0.0) when isolated
+        assert color == (1.0, 1.0, 0.0)
