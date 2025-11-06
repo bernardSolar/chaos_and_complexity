@@ -135,7 +135,7 @@ def get_boid_color(boid, boids):
     return (0.0, 1.0, 0.0)
 
 
-def draw_boid(position, velocity, color=(1.0, 1.0, 1.0)):
+def draw_boid(position, velocity, color=(1.0, 1.0, 1.0), size=1.0):
     glPushMatrix()
     glTranslatef(position[0], position[1], position[2])
 
@@ -157,11 +157,11 @@ def draw_boid(position, velocity, color=(1.0, 1.0, 1.0)):
     # Set boid color
     glColor3f(color[0], color[1], color[2])
 
-    # Draw triangular boid
+    # Draw triangular boid scaled by size
     glBegin(GL_TRIANGLES)
-    glVertex3f(2, 0, 0)
-    glVertex3f(-2, 1, 0)
-    glVertex3f(-2, -1, 0)
+    glVertex3f(2 * size, 0, 0)
+    glVertex3f(-2 * size, 1 * size, 0)
+    glVertex3f(-2 * size, -1 * size, 0)
     glEnd()
 
     glPopMatrix()
