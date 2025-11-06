@@ -14,7 +14,7 @@ from pathlib import Path
 
 # Add parent directory to path to import boids
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from boids import normalize, limit_magnitude
+from boids import normalize, limit_magnitude, Boid
 
 
 class TestNormalizeFunction:
@@ -95,3 +95,35 @@ class TestLimitMagnitudeFunction:
         # Document actual behavior: returned unchanged
         assert np.array_equal(result, input_vector)
         assert np.isclose(np.linalg.norm(result), np.linalg.norm(input_vector))
+
+
+class TestBoidClass:
+    """Characterization tests for the Boid class."""
+
+    def test_characterize_boid_initialization(self):
+        """Characterization: Boid.__init__() converts inputs to float32 arrays.
+
+        Position and velocity are converted from lists to numpy arrays with
+        float32 dtype. Acceleration is initialized to zeros [0, 0, 0] with
+        float32 dtype.
+
+        Observed: 2025-11-06
+        """
+        position = [10.0, 20.0, 30.0]
+        velocity = [1.0, 2.0, 3.0]
+
+        boid = Boid(position, velocity)
+
+        # Document actual behavior: conversion to float32 arrays
+        assert isinstance(boid.position, np.ndarray)
+        assert boid.position.dtype == np.float32
+        assert np.array_equal(boid.position, np.array([10.0, 20.0, 30.0]))
+
+        assert isinstance(boid.velocity, np.ndarray)
+        assert boid.velocity.dtype == np.float32
+        assert np.array_equal(boid.velocity, np.array([1.0, 2.0, 3.0]))
+
+        # Document acceleration initialization
+        assert isinstance(boid.acceleration, np.ndarray)
+        assert boid.acceleration.dtype == np.float32
+        assert np.array_equal(boid.acceleration, np.array([0.0, 0.0, 0.0]))
