@@ -19,5 +19,10 @@ def compute_lorenz_trajectory(initial_state, num_steps, dt):
     Returns:
         numpy.ndarray: Trajectory array of shape (num_steps, 3)
     """
-    # MINIMAL implementation - just return correct shape
-    return np.zeros((num_steps, 3))
+    # Create trajectory array
+    trajectory = np.zeros((num_steps, 3))
+
+    # Set initial state
+    trajectory[0] = initial_state
+
+    return trajectory
