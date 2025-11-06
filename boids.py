@@ -135,7 +135,7 @@ def get_boid_color(boid, boids):
     return (0.0, 1.0, 0.0)
 
 
-def draw_boid(position, velocity):
+def draw_boid(position, velocity, color=(1.0, 1.0, 1.0)):
     glPushMatrix()
     glTranslatef(position[0], position[1], position[2])
 
@@ -153,6 +153,9 @@ def draw_boid(position, velocity):
     ])
 
     glMultMatrixf(rotation_matrix)
+
+    # Set boid color
+    glColor3f(color[0], color[1], color[2])
 
     # Draw triangular boid
     glBegin(GL_TRIANGLES)
