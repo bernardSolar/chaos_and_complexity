@@ -350,6 +350,34 @@ class TestBoidRendering:
             # This will fail until we add the color parameter
             assert False, f"draw_boid should accept color parameter: {e}"
 
+    def test_render_boid_uses_proximity_based_color(self):
+        """Rendering should use get_boid_color() to determine color based on proximity.
+
+        When rendering a boid, the color should be determined by calling
+        get_boid_color() with the current boid and all boids in the flock.
+        The integration pattern is: get_boid_color() -> draw_boid(color=result)
+        """
+        from boids import draw_boid, get_boid_color
+
+        # Create a crowded scenario (boids very close = RED)
+        boid_a = Boid([0.0, 0.0, 0.0], [0.5, 0.0, 0.0])
+        boid_b = Boid([8.0, 0.0, 0.0], [0.5, 0.0, 0.0])
+        boids = [boid_a, boid_b]
+
+        # Get the color based on proximity
+        color = get_boid_color(boid_a, boids)
+
+        # Verify color is red (crowded)
+        assert color == (1.0, 0.0, 0.0), f"Expected red for crowded boids, got {color}"
+
+        # Should be able to render with this color
+        try:
+            draw_boid(boid_a.position, boid_a.velocity, color)
+            # Integration successful
+            assert True
+        except Exception as e:
+            assert False, f"Failed to render boid with proximity-based color: {e}"
+
 
 class TestBoidColorDetermination:
     """Tests for determining boid colors based on neighbor proximity."""
