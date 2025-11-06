@@ -228,8 +228,11 @@ while running:
         # Update position
         boid.update(np.array([WIDTH, HEIGHT, DEPTH]))
 
-        # Draw boid
-        draw_boid(boid.position, boid.velocity)
+        # Get color based on neighbor proximity
+        color = get_boid_color(boid, boids)
+
+        # Draw boid with color
+        draw_boid(boid.position, boid.velocity, color)
 
     pygame.display.flip()
     pygame.time.wait(10)
