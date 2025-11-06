@@ -14,7 +14,7 @@ from pathlib import Path
 
 # Add parent directory to path to import boids
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from boids import normalize, limit_magnitude, Boid
+from boids import normalize, limit_magnitude, Boid, separation
 
 
 class TestNormalizeFunction:
@@ -174,3 +174,31 @@ class TestBoidClass:
 
         # Document: 1 + (-2) = -1, then -1 % 800 = 799
         assert np.allclose(boid2.position, np.array([799.0, 300.0, 400.0]))
+
+
+class TestFlockingBehaviors:
+    """Characterization tests for Reynolds' boid flocking behaviors."""
+
+    def test_characterize_separation_with_nearby_boid(self):
+        """Characterization: separation() steers away from nearby boids.
+
+        When another boid is within separation radius, generates a steering
+        force pointing away from that boid. Force is limited to MAX_FORCE.
+
+        Observed: 2025-11-06
+        """
+        # Two boids 10 units apart on x-axis (within SEPARATION_RADIUS of 25)
+        boid_a = Boid([0.0, 0.0, 0.0], [0.5, 0.0, 0.0])
+        boid_b = Boid([10.0, 0.0, 0.0], [0.5, 0.0, 0.0])
+        boids = [boid_a, boid_b]
+
+        separation_radius = 25.0
+
+        steering = separation(boid_a, boids, separation_radius)
+
+        # Document actual behavior: steers away (negative x direction)
+        # Magnitude should be exactly MAX_FORCE (0.03)
+        assert steering[0] < 0  # Steering in negative x (away from boid_b)
+        assert steering[1] == 0  # No y component
+        assert steering[2] == 0  # No z component
+        assert np.isclose(np.linalg.norm(steering), 0.03)  # Limited to MAX_FORCE
