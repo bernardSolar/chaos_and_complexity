@@ -202,3 +202,24 @@ class TestFlockingBehaviors:
         assert steering[1] == 0  # No y component
         assert steering[2] == 0  # No z component
         assert np.isclose(np.linalg.norm(steering), 0.03)  # Limited to MAX_FORCE
+
+    def test_characterize_separation_outside_radius(self):
+        """Characterization: separation() returns zero when no boids nearby.
+
+        When all other boids are outside the separation radius, returns
+        zero steering force (no separation needed).
+
+        Observed: 2025-11-06
+        """
+        # Two boids 100 units apart (outside SEPARATION_RADIUS of 25)
+        boid_a = Boid([0.0, 0.0, 0.0], [0.5, 0.0, 0.0])
+        boid_b = Boid([100.0, 0.0, 0.0], [0.5, 0.0, 0.0])
+        boids = [boid_a, boid_b]
+
+        separation_radius = 25.0
+
+        steering = separation(boid_a, boids, separation_radius)
+
+        # Document actual behavior: zero force when no nearby boids
+        assert np.array_equal(steering, np.array([0.0, 0.0, 0.0]))
+        assert np.linalg.norm(steering) == 0.0
