@@ -14,7 +14,7 @@ from pathlib import Path
 
 # Add parent directory to path to import boids
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from boids import normalize, limit_magnitude, Boid, separation
+from boids import normalize, limit_magnitude, Boid, separation, alignment
 
 
 class TestNormalizeFunction:
@@ -223,3 +223,31 @@ class TestFlockingBehaviors:
         # Document actual behavior: zero force when no nearby boids
         assert np.array_equal(steering, np.array([0.0, 0.0, 0.0]))
         assert np.linalg.norm(steering) == 0.0
+
+    def test_characterize_alignment_with_neighbors(self):
+        """Characterization: alignment() steers toward average neighbor velocity.
+
+        When neighbors are within alignment radius, generates steering force
+        toward the average velocity of those neighbors. Force is limited to
+        MAX_FORCE.
+
+        Observed: 2025-11-06
+        """
+        # Three boids with different velocities, all within alignment radius
+        boid_a = Boid([0.0, 0.0, 0.0], [0.5, 0.0, 0.0])
+        boid_b = Boid([10.0, 0.0, 0.0], [0.0, 1.0, 0.0])  # 10 units away
+        boid_c = Boid([0.0, 10.0, 0.0], [0.0, 0.0, 1.5])  # 10 units away
+        boids = [boid_a, boid_b, boid_c]
+
+        alignment_radius = 50.0
+
+        steering = alignment(boid_a, boids, alignment_radius)
+
+        # Document actual behavior: steering toward average neighbor velocity
+        # Average of B and C velocities: ([0,1,0] + [0,0,1.5]) / 2 = [0, 0.5, 0.75]
+        # Steering magnitude should be limited to MAX_FORCE (0.03)
+        assert np.isclose(np.linalg.norm(steering), 0.03)
+
+        # Steering should have components in y and z (toward average velocity)
+        assert steering[1] > 0  # Positive y component
+        assert steering[2] > 0  # Positive z component
