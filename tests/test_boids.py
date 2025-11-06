@@ -322,3 +322,26 @@ class TestFlockingBehaviors:
         # Document actual behavior: zero force when no nearby neighbors
         assert np.array_equal(steering, np.array([0.0, 0.0, 0.0]))
         assert np.linalg.norm(steering) == 0.0
+
+
+class TestBoidColorDetermination:
+    """Tests for determining boid colors based on neighbor proximity."""
+
+    def test_boid_color_red_when_too_crowded(self):
+        """Boid should be red when neighbors are too close (crowded).
+
+        When multiple boids are within very close range (< SEPARATION_RADIUS/2),
+        the boid should turn red to indicate it's too crowded.
+        """
+        # Center boid with neighbors very close (within 10 units)
+        boid_a = Boid([0.0, 0.0, 0.0], [0.5, 0.0, 0.0])
+        boid_b = Boid([8.0, 0.0, 0.0], [0.5, 0.0, 0.0])
+        boid_c = Boid([0.0, 8.0, 0.0], [0.5, 0.0, 0.0])
+        boids = [boid_a, boid_b, boid_c]
+
+        from boids import get_boid_color
+
+        color = get_boid_color(boid_a, boids)
+
+        # Should be red (1.0, 0.0, 0.0) when too crowded
+        assert color == (1.0, 0.0, 0.0)
