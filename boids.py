@@ -131,8 +131,8 @@ def get_boid_color(boid, boids):
     if nearby_neighbors == 0:
         return (1.0, 1.0, 0.0)
 
-    # Default color for now
-    return (1.0, 1.0, 1.0)  # White
+    # Green if comfortable spacing (neighbors present but not too close)
+    return (0.0, 1.0, 0.0)
 
 
 def draw_boid(position, velocity):
