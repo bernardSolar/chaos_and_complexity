@@ -251,3 +251,24 @@ class TestFlockingBehaviors:
         # Steering should have components in y and z (toward average velocity)
         assert steering[1] > 0  # Positive y component
         assert steering[2] > 0  # Positive z component
+
+    def test_characterize_alignment_outside_radius(self):
+        """Characterization: alignment() returns zero when no neighbors nearby.
+
+        When all other boids are outside the alignment radius, returns
+        zero steering force (no velocity matching needed).
+
+        Observed: 2025-11-06
+        """
+        # Two boids 100 units apart (outside ALIGNMENT_RADIUS of 50)
+        boid_a = Boid([0.0, 0.0, 0.0], [0.5, 0.0, 0.0])
+        boid_b = Boid([100.0, 0.0, 0.0], [0.0, 1.0, 0.0])
+        boids = [boid_a, boid_b]
+
+        alignment_radius = 50.0
+
+        steering = alignment(boid_a, boids, alignment_radius)
+
+        # Document actual behavior: zero force when no nearby neighbors
+        assert np.array_equal(steering, np.array([0.0, 0.0, 0.0]))
+        assert np.linalg.norm(steering) == 0.0
