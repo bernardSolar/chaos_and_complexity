@@ -363,3 +363,22 @@ class TestBoidColorDetermination:
 
         # Should be yellow (1.0, 1.0, 0.0) when isolated
         assert color == (1.0, 1.0, 0.0)
+
+    def test_boid_color_green_when_comfortable(self):
+        """Boid should be green when neighbors are at comfortable distance.
+
+        When neighbors are within comfortable range (between SEPARATION_RADIUS
+        and COHESION_RADIUS), the boid should be green.
+        """
+        # Boid with neighbors at comfortable distance (30 units)
+        boid_a = Boid([0.0, 0.0, 0.0], [0.5, 0.0, 0.0])
+        boid_b = Boid([30.0, 0.0, 0.0], [0.5, 0.0, 0.0])
+        boid_c = Boid([0.0, 30.0, 0.0], [0.5, 0.0, 0.0])
+        boids = [boid_a, boid_b, boid_c]
+
+        from boids import get_boid_color
+
+        color = get_boid_color(boid_a, boids)
+
+        # Should be green (0.0, 1.0, 0.0) when comfortable
+        assert color == (0.0, 1.0, 0.0)
