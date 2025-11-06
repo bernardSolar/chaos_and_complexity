@@ -76,3 +76,35 @@ class TestLorenzAttractorXYZCharacterization:
         assert isinstance(lorenz_attractor_xyz.xs[0], (float, np.floating))
         assert isinstance(lorenz_attractor_xyz.ys[0], (float, np.floating))
         assert isinstance(lorenz_attractor_xyz.zs[0], (float, np.floating))
+
+    def test_characterize_parameter_values(self):
+        """Characterization: Script uses specific Lorenz system parameters.
+
+        The script hardcodes these parameter values:
+        - sigma = 10 (Prandtl number)
+        - rho = 35 (Rayleigh number) ← NOTE: Different from module version (28)!
+        - beta = 8/3 ≈ 2.666... (Geometric factor)
+        - dt = 0.01 (time step for Euler integration)
+        - num_steps = 5000 (total integration steps)
+
+        The rho=35 value will produce different chaotic dynamics compared to
+        the standard rho=28 used in src/simulations/lorenz.py.
+
+        This test documents existing behavior before refactoring.
+        Based on Michael Feathers' "Working Effectively with Legacy Code".
+
+        Observed: 2025-11-06
+        """
+        # Mock plt.show() to prevent blocking during import
+        with patch('matplotlib.pyplot.show'):
+            import lorenz_attractor_xyz
+
+        # Document what it ACTUALLY does: uses these specific parameter values
+        assert lorenz_attractor_xyz.sigma == 10
+        assert lorenz_attractor_xyz.rho == 35  # Different from standard 28!
+        assert lorenz_attractor_xyz.beta == 8 / 3
+        assert np.isclose(lorenz_attractor_xyz.beta, 2.666666666666667)
+
+        # Time integration parameters
+        assert lorenz_attractor_xyz.dt == 0.01
+        assert lorenz_attractor_xyz.num_steps == 5000
