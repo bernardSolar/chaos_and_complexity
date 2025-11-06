@@ -127,3 +127,26 @@ class TestBoidClass:
         assert isinstance(boid.acceleration, np.ndarray)
         assert boid.acceleration.dtype == np.float32
         assert np.array_equal(boid.acceleration, np.array([0.0, 0.0, 0.0]))
+
+    def test_characterize_boid_update_basic_movement(self):
+        """Characterization: Boid.update() applies forces and moves position.
+
+        The update cycle: acceleration → velocity → position, then reset
+        acceleration to zeros. This is the fundamental movement loop.
+
+        Observed: 2025-11-06
+        """
+        boid = Boid([100.0, 200.0, 300.0], [1.0, 0.5, 0.0])
+        boid.acceleration = np.array([0.1, 0.2, 0.3], dtype=np.float32)
+        bounds = np.array([800, 600, 800])
+
+        boid.update(bounds)
+
+        # Document actual behavior: acceleration added to velocity
+        assert np.allclose(boid.velocity, np.array([1.1, 0.7, 0.3]))
+
+        # Document: new velocity added to position
+        assert np.allclose(boid.position, np.array([101.1, 200.7, 300.3]))
+
+        # Document: acceleration reset to zeros after update
+        assert np.array_equal(boid.acceleration, np.array([0.0, 0.0, 0.0]))
