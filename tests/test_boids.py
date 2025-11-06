@@ -78,3 +78,20 @@ class TestLimitMagnitudeFunction:
         expected_direction = input_vector / np.linalg.norm(input_vector)
         actual_direction = result / np.linalg.norm(result)
         assert np.allclose(expected_direction, actual_direction)
+
+    def test_characterize_limit_magnitude_below_max(self):
+        """Characterization: limit_magnitude() passes through vectors below max.
+
+        When a vector's magnitude is already below max_magnitude, it is
+        returned unchanged (pass-through behavior).
+
+        Observed: 2025-11-06
+        """
+        input_vector = np.array([2.0, 1.0, 0.0])  # magnitude ≈ 2.236
+        max_magnitude = 10.0
+
+        result = limit_magnitude(input_vector, max_magnitude)
+
+        # Document actual behavior: returned unchanged
+        assert np.array_equal(result, input_vector)
+        assert np.isclose(np.linalg.norm(result), np.linalg.norm(input_vector))
