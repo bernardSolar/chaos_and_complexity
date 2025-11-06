@@ -5,6 +5,13 @@ This script demonstrates how to use the mandelbrot computation module
 and visualize the results with matplotlib.
 """
 
+import sys
+from pathlib import Path
+
+# Add project root to Python path
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
+
 import matplotlib.pyplot as plt
 from src.fractals.mandelbrot import mandelbrot
 
