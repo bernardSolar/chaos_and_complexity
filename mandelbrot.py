@@ -1,25 +1,35 @@
-import numpy as np
-import matplotlib.pyplot as plt
+"""
+DEPRECATED: This module is deprecated. Use src.fractals.mandelbrot instead.
 
-def mandelbrot(h, w, max_iter):
-    y, x = np.ogrid[-1.4:1.4:h*1j, -2:0.8:w*1j]
-    c = x + y*1j
-    z = c
-    divtime = max_iter + np.zeros(z.shape, dtype=int)
+For computation: from src.fractals.mandelbrot import mandelbrot
+For visualization: see examples/plot_mandelbrot.py
 
-    for i in range(max_iter):
-        z = z**2 + c
-        diverge = z*np.conj(z) > 2**2
-        div_now = diverge & (divtime == max_iter)
-        divtime[div_now] = i
-        z[diverge] = 2
+This file provides backwards compatibility but will be removed in a future version.
+"""
 
-    return divtime
+import warnings
 
-h, w = 1000, 1500
-max_iter = 100
-plt.figure(figsize=(12, 8))
-plt.imshow(mandelbrot(h, w, max_iter), cmap='magma', extent=[-2, 0.8, -1.4, 1.4])
-plt.title("Mandelbrot Set")
-plt.colorbar(label='Iteration count')
-plt.show()
+# Import from new location for backwards compatibility
+from src.fractals.mandelbrot import mandelbrot
+
+# Issue deprecation warning
+warnings.warn(
+    "Importing from root 'mandelbrot' module is deprecated. "
+    "Use 'from src.fractals.mandelbrot import mandelbrot' instead.",
+    DeprecationWarning,
+    stacklevel=2
+)
+
+# If run as script, show visualization
+if __name__ == "__main__":
+    import matplotlib.pyplot as plt
+
+    print("Running deprecated script. Use examples/plot_mandelbrot.py instead.")
+
+    h, w = 1000, 1500
+    max_iter = 100
+    plt.figure(figsize=(12, 8))
+    plt.imshow(mandelbrot(h, w, max_iter), cmap='magma', extent=[-2, 0.8, -1.4, 1.4])
+    plt.title("Mandelbrot Set")
+    plt.colorbar(label='Iteration count')
+    plt.show()
