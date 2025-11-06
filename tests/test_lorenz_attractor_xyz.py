@@ -47,3 +47,32 @@ class TestLorenzAttractorXYZCharacterization:
         assert isinstance(lorenz_attractor_xyz.xs, np.ndarray)
         assert isinstance(lorenz_attractor_xyz.ys, np.ndarray)
         assert isinstance(lorenz_attractor_xyz.zs, np.ndarray)
+
+    def test_characterize_initial_conditions(self):
+        """Characterization: Script uses fixed initial conditions [0.0, 1.0, 1.05].
+
+        The first element of each array (index 0) contains the initial state:
+        - xs[0] = 0.0 (convection rate)
+        - ys[0] = 1.0 (temperature difference)
+        - zs[0] = 1.05 (temperature profile deviation)
+
+        These specific values are hardcoded in the script (line 20).
+
+        This test documents existing behavior before refactoring.
+        Based on Michael Feathers' "Working Effectively with Legacy Code".
+
+        Observed: 2025-11-06
+        """
+        # Mock plt.show() to prevent blocking during import
+        with patch('matplotlib.pyplot.show'):
+            import lorenz_attractor_xyz
+
+        # Document what it ACTUALLY does: sets specific initial conditions
+        assert lorenz_attractor_xyz.xs[0] == 0.0
+        assert lorenz_attractor_xyz.ys[0] == 1.0
+        assert lorenz_attractor_xyz.zs[0] == 1.05
+
+        # Verify these are the exact float values
+        assert isinstance(lorenz_attractor_xyz.xs[0], (float, np.floating))
+        assert isinstance(lorenz_attractor_xyz.ys[0], (float, np.floating))
+        assert isinstance(lorenz_attractor_xyz.zs[0], (float, np.floating))
