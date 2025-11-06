@@ -14,7 +14,7 @@ from pathlib import Path
 
 # Add parent directory to path to import boids
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from boids import normalize, limit_magnitude, Boid, separation, alignment
+from boids import normalize, limit_magnitude, Boid, separation, alignment, cohesion
 
 
 class TestNormalizeFunction:
@@ -272,3 +272,32 @@ class TestFlockingBehaviors:
         # Document actual behavior: zero force when no nearby neighbors
         assert np.array_equal(steering, np.array([0.0, 0.0, 0.0]))
         assert np.linalg.norm(steering) == 0.0
+
+    def test_characterize_cohesion_with_neighbors(self):
+        """Characterization: cohesion() steers toward center of mass of neighbors.
+
+        When neighbors are within cohesion radius, generates steering force
+        toward the average position (center of mass) of those neighbors.
+        Force is limited to MAX_FORCE.
+
+        Observed: 2025-11-06
+        """
+        # Three boids forming a triangle, all within cohesion radius
+        boid_a = Boid([0.0, 0.0, 0.0], [0.5, 0.0, 0.0])
+        boid_b = Boid([20.0, 0.0, 0.0], [0.0, 0.5, 0.0])  # 20 units to the right
+        boid_c = Boid([0.0, 20.0, 0.0], [0.0, 0.0, 0.5])  # 20 units up
+        boids = [boid_a, boid_b, boid_c]
+
+        cohesion_radius = 50.0
+
+        steering = cohesion(boid_a, boids, cohesion_radius)
+
+        # Document actual behavior: steering toward center of mass
+        # Center of mass of B and C: ([20,0,0] + [0,20,0]) / 2 = [10, 10, 0]
+        # Steering magnitude should be limited to MAX_FORCE (0.03)
+        assert np.isclose(np.linalg.norm(steering), 0.03)
+
+        # Steering should point toward center of mass (positive x and y)
+        assert steering[0] > 0  # Positive x component (toward center)
+        assert steering[1] > 0  # Positive y component (toward center)
+        assert steering[2] == 0  # No z component (center is in xy plane)
