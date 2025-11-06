@@ -110,16 +110,26 @@ def get_boid_color(boid, boids):
     crowded_threshold = SEPARATION_RADIUS / 2
 
     close_neighbors = 0
+    nearby_neighbors = 0
+
     for other in boids:
         if other is boid:
             continue
         distance = np.linalg.norm(boid.position - other.position)
+
         if distance < crowded_threshold:
             close_neighbors += 1
+
+        if distance < COHESION_RADIUS:
+            nearby_neighbors += 1
 
     # Red if too crowded
     if close_neighbors > 0:
         return (1.0, 0.0, 0.0)
+
+    # Yellow if isolated (no neighbors within cohesion radius)
+    if nearby_neighbors == 0:
+        return (1.0, 1.0, 0.0)
 
     # Default color for now
     return (1.0, 1.0, 1.0)  # White
