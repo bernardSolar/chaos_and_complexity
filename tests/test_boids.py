@@ -378,6 +378,27 @@ class TestBoidRendering:
         except Exception as e:
             assert False, f"Failed to render boid with proximity-based color: {e}"
 
+    def test_draw_boid_accepts_size_parameter(self):
+        """draw_boid should accept a size parameter to scale boid rendering.
+
+        The size parameter allows scaling the boid's visual representation.
+        A size of 1.0 is the default, 1.5 makes it 50% larger.
+        """
+        from boids import draw_boid
+
+        position = np.array([400.0, 300.0, 400.0])
+        velocity = np.array([1.0, 0.0, 0.0])
+        color = (0.0, 1.0, 0.0)  # Green
+        size = 1.5  # 50% larger
+
+        # Should accept size parameter without crashing
+        try:
+            draw_boid(position, velocity, color, size)
+            # If we get here, function accepted the size parameter
+            assert True
+        except TypeError as e:
+            assert False, f"draw_boid should accept size parameter: {e}"
+
 
 class TestBoidColorDetermination:
     """Tests for determining boid colors based on neighbor proximity."""
