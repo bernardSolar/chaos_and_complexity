@@ -150,3 +150,27 @@ class TestBoidClass:
 
         # Document: acceleration reset to zeros after update
         assert np.array_equal(boid.acceleration, np.array([0.0, 0.0, 0.0]))
+
+    def test_characterize_boid_update_boundary_wrapping(self):
+        """Characterization: Boid.update() wraps position at boundaries.
+
+        Uses modulo (%) to wrap positions that exceed bounds back to the
+        opposite edge. This creates toroidal (Pac-Man style) wrapping behavior.
+
+        Observed: 2025-11-06
+        """
+        bounds = np.array([800, 600, 800])
+
+        # Test: crossing right boundary (x exceeds 800)
+        boid1 = Boid([799.0, 300.0, 400.0], [2.0, 0.0, 0.0])
+        boid1.update(bounds)
+
+        # Document: 799 + 2 = 801, then 801 % 800 = 1
+        assert np.allclose(boid1.position, np.array([1.0, 300.0, 400.0]))
+
+        # Test: crossing left boundary (x goes negative)
+        boid2 = Boid([1.0, 300.0, 400.0], [-2.0, 0.0, 0.0])
+        boid2.update(bounds)
+
+        # Document: 1 + (-2) = -1, then -1 % 800 = 799
+        assert np.allclose(boid2.position, np.array([799.0, 300.0, 400.0]))
