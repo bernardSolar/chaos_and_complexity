@@ -324,6 +324,33 @@ class TestFlockingBehaviors:
         assert np.linalg.norm(steering) == 0.0
 
 
+class TestBoidRendering:
+    """Tests for boid rendering with colors."""
+
+    def test_draw_boid_accepts_color_parameter(self):
+        """draw_boid should accept a color parameter for rendering.
+
+        The draw_boid function needs to accept a color tuple (r, g, b)
+        to enable colored rendering based on boid proximity.
+        """
+        from boids import draw_boid
+
+        position = np.array([400.0, 300.0, 400.0])
+        velocity = np.array([1.0, 0.0, 0.0])
+        color = (1.0, 0.0, 0.0)  # Red
+
+        # Should accept color parameter without crashing
+        # Note: We can't test actual OpenGL rendering, but we can verify
+        # the function signature accepts the parameter
+        try:
+            draw_boid(position, velocity, color)
+            # If we get here, the function accepted the color parameter
+            assert True
+        except TypeError as e:
+            # This will fail until we add the color parameter
+            assert False, f"draw_boid should accept color parameter: {e}"
+
+
 class TestBoidColorDetermination:
     """Tests for determining boid colors based on neighbor proximity."""
 
