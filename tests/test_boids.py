@@ -14,7 +14,7 @@ from pathlib import Path
 
 # Add parent directory to path to import boids
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from boids import normalize
+from boids import normalize, limit_magnitude
 
 
 class TestNormalizeFunction:
@@ -52,3 +52,29 @@ class TestNormalizeFunction:
         # Document actual behavior: returns zero vector unchanged
         assert np.allclose(result, np.array([0.0, 0.0, 0.0]))
         assert np.linalg.norm(result) == 0.0
+
+
+class TestLimitMagnitudeFunction:
+    """Characterization tests for the limit_magnitude() utility function."""
+
+    def test_characterize_limit_magnitude_exceeds_max(self):
+        """Characterization: limit_magnitude() clamps vectors exceeding maximum.
+
+        When a vector's magnitude exceeds the max_magnitude parameter,
+        the vector is scaled down to exactly max_magnitude while preserving
+        direction.
+
+        Observed: 2025-11-06
+        """
+        input_vector = np.array([6.0, 8.0, 0.0])  # magnitude = 10.0
+        max_magnitude = 5.0
+
+        result = limit_magnitude(input_vector, max_magnitude)
+
+        # Document actual behavior: scaled to max while preserving direction
+        assert np.allclose(result, np.array([3.0, 4.0, 0.0]))
+        assert np.isclose(np.linalg.norm(result), 5.0)
+        # Verify direction preserved (same unit vector)
+        expected_direction = input_vector / np.linalg.norm(input_vector)
+        actual_direction = result / np.linalg.norm(result)
+        assert np.allclose(expected_direction, actual_direction)
