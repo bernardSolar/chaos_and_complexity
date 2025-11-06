@@ -231,8 +231,8 @@ while running:
         # Get color based on neighbor proximity
         color = get_boid_color(boid, boids)
 
-        # Draw boid with color
-        draw_boid(boid.position, boid.velocity, color)
+        # Draw boid with color at 1.5x size (50% larger)
+        draw_boid(boid.position, boid.velocity, color, size=1.5)
 
     pygame.display.flip()
     pygame.time.wait(10)
