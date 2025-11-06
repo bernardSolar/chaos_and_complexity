@@ -108,3 +108,58 @@ class TestLorenzAttractorXYZCharacterization:
         # Time integration parameters
         assert lorenz_attractor_xyz.dt == 0.01
         assert lorenz_attractor_xyz.num_steps == 5000
+
+    def test_characterize_first_integration_step(self):
+        """Characterization: First step of Euler integration produces specific values.
+
+        Using the Lorenz equations with the hardcoded parameters:
+        - Initial: [x=0.0, y=1.0, z=1.05]
+        - sigma=10, rho=35, beta=8/3, dt=0.01
+
+        After one Euler step (index 1):
+        - dx = sigma * (y - x) * dt = 10 * (1.0 - 0.0) * 0.01 = 0.1
+        - dy = (x * (rho - z) - y) * dt = (0.0 * (35 - 1.05) - 1.0) * 0.01 = -0.01
+        - dz = (x * y - beta * z) * dt = (0.0 * 1.0 - 2.666... * 1.05) * 0.01 = -0.028
+
+        Result: [x=0.1, y=0.99, z=1.022]
+
+        This test documents existing behavior before refactoring.
+        Based on Michael Feathers' "Working Effectively with Legacy Code".
+
+        Observed: 2025-11-06
+        """
+        # Mock plt.show() to prevent blocking during import
+        with patch('matplotlib.pyplot.show'):
+            import lorenz_attractor_xyz
+
+        # Document what it ACTUALLY computes at step 1
+        assert np.isclose(lorenz_attractor_xyz.xs[1], 0.1)
+        assert np.isclose(lorenz_attractor_xyz.ys[1], 0.99)
+        assert np.isclose(lorenz_attractor_xyz.zs[1], 1.022)
+
+    def test_characterize_trajectory_after_100_steps(self):
+        """Characterization: After 100 steps, trajectory reaches specific values.
+
+        This test locks down the cumulative behavior of the numerical integration
+        over 100 time steps. The chaotic nature of the Lorenz system means even
+        tiny changes in computation will cause this test to fail.
+
+        After 100 steps (1 second of simulated time at dt=0.01):
+        - x ≈ 7.373
+        - y ≈ 11.379
+        - z ≈ 24.872
+
+        This test documents existing behavior before refactoring.
+        Based on Michael Feathers' "Working Effectively with Legacy Code".
+
+        Observed: 2025-11-06
+        """
+        # Mock plt.show() to prevent blocking during import
+        with patch('matplotlib.pyplot.show'):
+            import lorenz_attractor_xyz
+
+        # Document what it ACTUALLY computes at step 100
+        # Using rtol=1e-10 to catch even tiny numerical changes
+        assert np.isclose(lorenz_attractor_xyz.xs[100], 7.373312457204771, rtol=1e-10)
+        assert np.isclose(lorenz_attractor_xyz.ys[100], 11.378963072941088, rtol=1e-10)
+        assert np.isclose(lorenz_attractor_xyz.zs[100], 24.87171753798129, rtol=1e-10)
