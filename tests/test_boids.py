@@ -36,3 +36,19 @@ class TestNormalizeFunction:
         # Document what it ACTUALLY does
         assert np.allclose(result, np.array([0.6, 0.8, 0.0]))
         assert np.isclose(np.linalg.norm(result), 1.0)
+
+    def test_characterize_normalize_zero_vector(self):
+        """Characterization: normalize() returns zero vector for zero input.
+
+        This documents the defensive zero-handling behavior that prevents
+        division by zero errors.
+
+        Observed: 2025-11-06
+        """
+        zero_vector = np.array([0.0, 0.0, 0.0])
+
+        result = normalize(zero_vector)
+
+        # Document actual behavior: returns zero vector unchanged
+        assert np.allclose(result, np.array([0.0, 0.0, 0.0]))
+        assert np.linalg.norm(result) == 0.0
