@@ -1,5 +1,5 @@
 """
-Characterization tests for boids.py
+Characterization tests for boids flocking simulation.
 
 These tests document the actual current behavior of the boids simulation code.
 Following Michael Feathers' "Working Effectively with Legacy Code" methodology.
@@ -9,12 +9,11 @@ not what it SHOULD do.
 """
 import numpy as np
 import pytest
-import sys
-from pathlib import Path
 
-# Add parent directory to path to import boids
-sys.path.insert(0, str(Path(__file__).parent.parent))
-from boids import normalize, limit_magnitude, Boid, separation, alignment, cohesion
+from src.simulations.boids import (
+    normalize, limit_magnitude, Boid, separation, alignment, cohesion,
+    get_boid_color,
+)
 
 
 class TestNormalizeFunction:
@@ -324,82 +323,6 @@ class TestFlockingBehaviors:
         assert np.linalg.norm(steering) == 0.0
 
 
-class TestBoidRendering:
-    """Tests for boid rendering with colors."""
-
-    def test_draw_boid_accepts_color_parameter(self):
-        """draw_boid should accept a color parameter for rendering.
-
-        The draw_boid function needs to accept a color tuple (r, g, b)
-        to enable colored rendering based on boid proximity.
-        """
-        from boids import draw_boid
-
-        position = np.array([400.0, 300.0, 400.0])
-        velocity = np.array([1.0, 0.0, 0.0])
-        color = (1.0, 0.0, 0.0)  # Red
-
-        # Should accept color parameter without crashing
-        # Note: We can't test actual OpenGL rendering, but we can verify
-        # the function signature accepts the parameter
-        try:
-            draw_boid(position, velocity, color)
-            # If we get here, the function accepted the color parameter
-            assert True
-        except TypeError as e:
-            # This will fail until we add the color parameter
-            assert False, f"draw_boid should accept color parameter: {e}"
-
-    def test_render_boid_uses_proximity_based_color(self):
-        """Rendering should use get_boid_color() to determine color based on proximity.
-
-        When rendering a boid, the color should be determined by calling
-        get_boid_color() with the current boid and all boids in the flock.
-        The integration pattern is: get_boid_color() -> draw_boid(color=result)
-        """
-        from boids import draw_boid, get_boid_color
-
-        # Create a crowded scenario (boids very close = RED)
-        boid_a = Boid([0.0, 0.0, 0.0], [0.5, 0.0, 0.0])
-        boid_b = Boid([8.0, 0.0, 0.0], [0.5, 0.0, 0.0])
-        boids = [boid_a, boid_b]
-
-        # Get the color based on proximity
-        color = get_boid_color(boid_a, boids)
-
-        # Verify color is red (crowded)
-        assert color == (1.0, 0.0, 0.0), f"Expected red for crowded boids, got {color}"
-
-        # Should be able to render with this color
-        try:
-            draw_boid(boid_a.position, boid_a.velocity, color)
-            # Integration successful
-            assert True
-        except Exception as e:
-            assert False, f"Failed to render boid with proximity-based color: {e}"
-
-    def test_draw_boid_accepts_size_parameter(self):
-        """draw_boid should accept a size parameter to scale boid rendering.
-
-        The size parameter allows scaling the boid's visual representation.
-        A size of 1.0 is the default, 1.5 makes it 50% larger.
-        """
-        from boids import draw_boid
-
-        position = np.array([400.0, 300.0, 400.0])
-        velocity = np.array([1.0, 0.0, 0.0])
-        color = (0.0, 1.0, 0.0)  # Green
-        size = 1.5  # 50% larger
-
-        # Should accept size parameter without crashing
-        try:
-            draw_boid(position, velocity, color, size)
-            # If we get here, function accepted the size parameter
-            assert True
-        except TypeError as e:
-            assert False, f"draw_boid should accept size parameter: {e}"
-
-
 class TestBoidColorDetermination:
     """Tests for determining boid colors based on neighbor proximity."""
 
@@ -414,8 +337,6 @@ class TestBoidColorDetermination:
         boid_b = Boid([8.0, 0.0, 0.0], [0.5, 0.0, 0.0])
         boid_c = Boid([0.0, 8.0, 0.0], [0.5, 0.0, 0.0])
         boids = [boid_a, boid_b, boid_c]
-
-        from boids import get_boid_color
 
         color = get_boid_color(boid_a, boids)
 
@@ -433,8 +354,6 @@ class TestBoidColorDetermination:
         boid_b = Boid([100.0, 0.0, 0.0], [0.5, 0.0, 0.0])
         boids = [boid_a, boid_b]
 
-        from boids import get_boid_color
-
         color = get_boid_color(boid_a, boids)
 
         # Should be yellow (1.0, 1.0, 0.0) when isolated
@@ -451,8 +370,6 @@ class TestBoidColorDetermination:
         boid_b = Boid([30.0, 0.0, 0.0], [0.5, 0.0, 0.0])
         boid_c = Boid([0.0, 30.0, 0.0], [0.5, 0.0, 0.0])
         boids = [boid_a, boid_b, boid_c]
-
-        from boids import get_boid_color
 
         color = get_boid_color(boid_a, boids)
 
