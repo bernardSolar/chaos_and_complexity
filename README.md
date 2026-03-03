@@ -33,6 +33,7 @@ src/
     mandelbrot.py      # Mandelbrot set computation
 examples/
   plot_lorenz.py       # Lorenz animated 3D plot
+  plot_lorenz_dual.py  # Lorenz dual-panel (3D trajectory + 2D time series)
   plot_mandelbrot.py   # Mandelbrot visualization
   run_boids.py         # Boids 3D flocking simulation
 tests/                 # Characterization tests for all simulations
@@ -56,6 +57,9 @@ Computation modules in `src/` are pure — no visualization, no side effects. Vi
 ```bash
 # Lorenz attractor (animated 3D plot)
 python examples/plot_lorenz.py
+
+# Lorenz dual-panel (3D trajectory + 2D time series, rho=35)
+python examples/plot_lorenz_dual.py
 
 # Mandelbrot set
 python examples/plot_mandelbrot.py
